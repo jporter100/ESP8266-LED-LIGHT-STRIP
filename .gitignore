@@ -1,4 +1,8 @@
 #wifi credentials
+#actual file as follows:
+#define WIFI_SSID ""
+#define WIFI_PASS ""
+
 credentials.h
 
 # Folder view configuration files
