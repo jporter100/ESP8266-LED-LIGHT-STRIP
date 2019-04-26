@@ -1,3 +1,7 @@
+// v1 initial release manual configuration of wifi using programmer and credentials.h file
+// v2 introduce wifi connection manager
+// CHECK lwip version from tools->lwip variant. Must be 1.4 higherbandwith
+
 #include <Arduino.h>
 #ifdef ESP32
     #include <WiFi.h>
@@ -16,18 +20,9 @@ fauxmoESP fauxmo;
 
 #define SERIAL_BAUDRATE     115200
 
-/**#define LED_YELLOW          4
-#define LED_GREEN           5
-#define LED_BLUE            0
-#define LED_PINK            15
-*/
 #define LED_WHITE           2
 
-//#define ID_YELLOW           "yellow lamp"
-//#define ID_GREEN            "green lamp"
-//#define ID_BLUE             "blue lamp"
-//#define ID_PINK             "pink lamp"
-#define ID_WHITE            "barbeque lights"
+#define ID_WHITE            "new lights"
 
 // -----------------------------------------------------------------------------
 
@@ -64,17 +59,9 @@ void setup() {
     Serial.println();
 
     // LEDs
-//    pinMode(LED_YELLOW, OUTPUT);
-//    pinMode(LED_GREEN, OUTPUT);
-//    pinMode(LED_BLUE, OUTPUT);
-//    pinMode(LED_PINK, OUTPUT);
     pinMode(LED_WHITE, OUTPUT);
-//    digitalWrite(LED_YELLOW, LOW);
-//    digitalWrite(LED_GREEN, LOW);
-//    digitalWrite(LED_BLUE, LOW);
-//    digitalWrite(LED_PINK, LOW);
-    digitalWrite(LED_WHITE, LOW);
-
+    analogWrite(LED_WHITE, 0);
+    
     // Wifi
     wifiSetup();
 
@@ -95,10 +82,6 @@ void setup() {
     // "Alexa, set yellow lamp to fifty" (50 means 50% of brightness, note, this example does not use this functionality)
 
     // Add virtual devices
-//    fauxmo.addDevice(ID_YELLOW);
-//    fauxmo.addDevice(ID_GREEN);
-//    fauxmo.addDevice(ID_BLUE);
-//    fauxmo.addDevice(ID_PINK);
     fauxmo.addDevice(ID_WHITE);
 
     fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
@@ -115,8 +98,8 @@ void setup() {
         // Otherwise comparing the device_name is safer.
 
 
-if (strcmp(device_name, ID_WHITE)==0) {
-  digitalWrite(LED_WHITE, state ? HIGH : LOW);
+    if (strcmp(device_name, ID_WHITE)==0) {
+    analogWrite(LED_WHITE, state ? value : 0);
         }
 
     });
